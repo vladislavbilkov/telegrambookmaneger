@@ -1,9 +1,6 @@
 #ifndef BOTLOGICS
 #define BOTLOGICS
 
-#include <cstdint>
-#include <new>
-#include <string>
 #include <tgbot/Bot.h>
 #include <tgbot/tgbot.h>
 #include <list>

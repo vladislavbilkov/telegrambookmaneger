@@ -3,6 +3,7 @@
 #include "WriteRead.h"
 #include <cstdint>
 #include <cstdio>
+#include <list>
 #include <string>
 #include <tgbot/types/Message.h>
 
@@ -11,6 +12,7 @@ void BotLogics::AddBook(TgBot::Message::Ptr message)
     InfoToSave obg(message->messageId, message->chat->id);
     ListAllAddingBook.push_back(obg);
     (SaveTOFile(obg));
+    printf("List Message ID - %d. Message chat ID - %ld. Teg - %d\n", obg.GetMessageID(), obg.GetChatID(), obg.Teg);
 }
 
 void BotLogics::ViewAllBook(TgBot::Bot &bot, std::int64_t chatID)
@@ -20,11 +22,11 @@ void BotLogics::ViewAllBook(TgBot::Bot &bot, std::int64_t chatID)
         return;
     }
     for (InfoToSave i : ListAllAddingBook) {
+        printf("List Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
         if(chatID == i.GetChatID()) {
-            bot.getApi().sendMessage(chatID, "." ,false, i.GetMessageID());
+            bot.getApi().sendMessage(chatID, ".", false, i.GetMessageID());
         }
     }
-    
 }
 
 void BotLogics::ViewWantReadBook(TgBot::Bot &bot, std::int64_t chatID)
@@ -64,6 +66,7 @@ void BotLogics::LoadData()
     LoadFromFile load;
     auto tmp = load.GetList();//TODO: check how work
     for (InfoToSave i : tmp) {
+        printf("Load Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
         if (i.Teg == 3) {
             ListReadedBook.push_back(i);
         }
@@ -77,14 +80,18 @@ void BotLogics::LoadData()
             ListAllAddingBook.push_back(i);
         }
     }
+    for (InfoToSave i : ListAllAddingBook) {
+        printf("List Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
+    }
 }
 
 void BotLogics::SaveChange()
 {
-    (SaveTOFile(ListAllAddingBook));
-    (SaveTOFile(ListWantToReadBook));
-    (SaveTOFile(ListReadedBook));
-    (SaveTOFile(ListReadingBook));
+    std::list<InfoToSave> tmp = ListAllAddingBook;
+    tmp.splice(tmp.end(), ListWantToReadBook);
+    tmp.splice(tmp.end(), ListReadingBook);
+    tmp.splice(tmp.end(), ListReadedBook);
+    (SaveTOFile(tmp));
 }
  BotLogics::BotLogics()
  {
