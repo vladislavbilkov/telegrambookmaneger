@@ -4,7 +4,6 @@
 #include "InfoToSave.h"
 #include <fstream>
 #include <list>
-#include <string>
 
 const std::string src =  "data/data.dat";
 
