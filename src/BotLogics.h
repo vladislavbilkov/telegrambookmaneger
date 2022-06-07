@@ -15,7 +15,7 @@ class BotLogics
     std::list<InfoToSave> ListReadingBook;
     std::list<InfoToSave> ListReadedBook;
 
-    std::int32_t FindIdMessageToDel(std::int32_t findid);
+    std::int32_t FindIDMessageToDel(std::int32_t findID);
     void SaveChange();
     public:
     std::list<InfoToDelete> ListReplyMessage;
@@ -25,7 +25,7 @@ class BotLogics
     void ViewWantReadBook(TgBot::Bot &bot, std::int64_t chatID);
     void ViewReading(TgBot::Bot &bot, std::int64_t chatID);
     void ViewReaded(TgBot::Bot &bot, std::int64_t chatID);
-    void DeleteBook(TgBot::Message::Ptr &message);
+    void DeleteBook(TgBot::Bot &bot, TgBot::Message::Ptr &message);
     void LoadData();
 };
 #endif

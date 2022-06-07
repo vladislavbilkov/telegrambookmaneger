@@ -63,7 +63,7 @@ int main() {
     });
 
     bot.getEvents().onCommand("del",[&bot, &logics](TgBot::Message::Ptr message) {
-        logics.DeleteBook(message);
+        logics.DeleteBook(bot, message);
         return ;
     });
 

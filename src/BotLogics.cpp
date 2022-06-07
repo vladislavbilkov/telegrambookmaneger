@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <list>
 #include <string>
+#include <tgbot/Bot.h>
 #include <tgbot/types/Message.h>
 
 void BotLogics::AddBook(TgBot::Message::Ptr message)
@@ -42,6 +43,7 @@ void BotLogics::ViewReaded(TgBot::Bot &bot, std::int64_t chatID)
 {
     if (ListReadedBook.empty()) {
         bot.getApi().sendMessage(chatID, "Nothing readed");
+        return;
     }
     for (InfoToSave n : ListReadedBook) {
         if (n.GetChatID() == chatID) {
@@ -50,17 +52,18 @@ void BotLogics::ViewReaded(TgBot::Bot &bot, std::int64_t chatID)
     }
 }
 
-void BotLogics::DeleteBook(TgBot::Message::Ptr &message)
+void BotLogics::DeleteBook(TgBot::Bot &bot, TgBot::Message::Ptr &message)
 {
-    std::int32_t originid = FindIdMessageToDel(message->replyToMessage->messageId);
+    std::int32_t originid = FindIDMessageToDel(message->replyToMessage->messageId);
     printf("Delete block origin id message - %d\n", originid);
     if (originid == -1) {
+        bot.getApi().sendMessage(message->chat->id, "Sorry dont find message, please check your reply message");
         return;
     }
     for (std::list<InfoToSave>::iterator it = ListAllAddingBook.begin(); it != ListAllAddingBook.end(); it++) {
         if (it->GetMessageID() == originid) {
             ListAllAddingBook.erase(it);
-            //send msg
+            bot.getApi().sendMessage(message->chat->id, "message been delete");
             break;
         }
     }
@@ -70,7 +73,7 @@ void BotLogics::DeleteBook(TgBot::Message::Ptr &message)
 void BotLogics::LoadData()
 {
     LoadFromFile load;
-    auto tmp = load.GetList();//TODO: check how work
+    auto tmp = load.GetList();
     for (InfoToSave i : tmp) {
         printf("Load Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
         if (i.Teg == 2) {
@@ -98,12 +101,12 @@ BotLogics::BotLogics()
      
 }
 
-std::int32_t BotLogics::FindIdMessageToDel(std::int32_t findid) 
+std::int32_t BotLogics::FindIDMessageToDel(std::int32_t findID) 
 {
     for (InfoToDelete i : ListReplyMessage) {
-        printf("Find id block id massage- %d find id -%d\n", i.replymessage, findid);
-        if (findid == i.replymessage) {
-            return i.originalmessage;
+        printf("Find id block id massage- %d find id -%d\n", i.ReplyMessage, findID);
+        if (findID == i.ReplyMessage) {
+            return i.OriginalMessage;
         }
     }
     return -1;
