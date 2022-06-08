@@ -74,7 +74,6 @@ void BotLogics::DeleteBook(TgBot::Bot &bot, TgBot::Message::Ptr &message)
 
 void BotLogics::EditBook(TgBot::Bot &bot, TgBot::Message::Ptr &message)
 {
-    bot.getApi().unpinChatMessage(message->chat->id);
     char whatid = CheckWhatIsEdit(message->text);
     if (whatid == -1) {
         bot.getApi().sendMessage(message->chat->id, "Sorry don`t understand your teg. Please check and try again");
