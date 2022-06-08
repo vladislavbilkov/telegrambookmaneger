@@ -35,19 +35,26 @@ void BotLogics::ViewReading(TgBot::Bot &bot, std::int64_t chatID)
 {
     if (ListReadingBook.empty()) {
         bot.getApi().sendMessage(chatID, "Nothing reading book, maybe need add from all want read list?");
+        return;
     }
-
+    for (InfoToSave i : ListReadingBook) {
+        printf("List Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
+        if(chatID == i.GetChatID()) {
+            ListReplyMessage.push_back(InfoToDelete(bot.getApi().sendMessage(chatID, ".", false, i.GetMessageID())->messageId, i.GetMessageID()));
+        }
+    }
 }
 
 void BotLogics::ViewReaded(TgBot::Bot &bot, std::int64_t chatID)
 {
     if (ListReadedBook.empty()) {
-        bot.getApi().sendMessage(chatID, "Nothing readed");
+        bot.getApi().sendMessage(chatID, "You dont readed books");
         return;
     }
-    for (InfoToSave n : ListReadedBook) {
-        if (n.GetChatID() == chatID) {
-            bot.getApi().sendMessage(chatID, "", n.GetMessageID());
+    for (InfoToSave i : ListReadedBook) {
+        printf("List Message ID - %d. Message chat ID - %ld. Teg - %d\n", i.GetMessageID(), i.GetChatID(), i.Teg);
+        if(chatID == i.GetChatID()) {
+            bot.getApi().sendMessage(chatID, ".", false, i.GetMessageID());
         }
     }
 }
@@ -68,6 +75,44 @@ void BotLogics::DeleteBook(TgBot::Bot &bot, TgBot::Message::Ptr &message)
         }
     }
     SaveChange();   
+}
+
+void BotLogics::EditBook(TgBot::Bot &bot, TgBot::Message::Ptr &message)
+{
+    char tmp;
+    if (message->text == "/edit all") {
+        tmp = 0;
+    } else if (message->text == "/edit reading") {
+        tmp = 1;
+    } else if (message->text == "/edit readed") {
+        tmp = 2;
+    } else {
+        bot.getApi().sendMessage(message->chat->id, "Sorry don`t understand your teg. Please check and try again");
+        return;
+    }
+
+    std::int32_t originid = FindIDMessageToDel(message->replyToMessage->messageId);
+    printf("Delete block origin id message - %d\n", originid);
+    if (originid == -1) {
+        bot.getApi().sendMessage(message->chat->id, "Sorry dont find message, please check your reply message");
+        return;
+    }
+
+    for (std::list<InfoToSave>::iterator it = ListReadingBook.begin(); it != ListReadingBook.end(); it++) {
+        if (it->GetMessageID() == originid) {
+            it->Teg = tmp;
+            bot.getApi().sendMessage(message->chat->id, "List been changed");
+            break;
+        }
+    }
+
+    for (std::list<InfoToSave>::iterator it = ListAllAddingBook.begin(); it != ListAllAddingBook.end(); it++) {
+        if (it->GetMessageID() == originid) {
+            it->Teg = tmp;
+            bot.getApi().sendMessage(message->chat->id, "List been chanded");
+            return;
+        }
+    }
 }
 
 void BotLogics::LoadData()

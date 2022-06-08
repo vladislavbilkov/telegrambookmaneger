@@ -23,7 +23,6 @@ class InfoToSave {
     }
 };
 //Teg 0 - all book list
-//1 - Want read book
-//2 - Reading book
-//3 - Readed book
+//1 - Reading book
+//2 - Readed book
 #endif

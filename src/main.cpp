@@ -15,9 +15,9 @@
 
 #include "BotLogics.h"
 
-    const std::string Menucommand[] = {"/start", "/all", "/add", "/del", "/reading", "/readed", "/help"};
+    const std::string Menucommand[] = {"/start", "/all", "/add", "/del", "/reading", "/readed", "/edit", "/help"};
     const std::string Menudescription[] = {"Lets start", "Show adding book", "For add book next message must be forwarded ", "For delete reply sended message",
-    "Show what book you reading", "Show what book you readed", "get help"};
+    "Show what book you reading", "Show what book you readed", "for edit reply massage for this text(all ,reading ,readed) ", "get help"};
 
 //Initial command for bots
 std::vector<TgBot::BotCommand::Ptr> InitialCommands() {
@@ -61,9 +61,12 @@ int main() {
         logics.ViewAllBook(bot, message->chat->id);
         return;
     });
-
-    bot.getEvents().onCommand("del",[&bot, &logics](TgBot::Message::Ptr message) {
+    bot.getEvents().onCommand("del", [&bot, &logics](TgBot::Message::Ptr message) {
         logics.DeleteBook(bot, message);
+        return ;
+    });
+    bot.getEvents().onCommand("edit", [&bot, &logics](TgBot::Message::Ptr message) {
+        
         return ;
     });
 

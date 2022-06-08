@@ -26,6 +26,7 @@ class BotLogics
     void ViewReading(TgBot::Bot &bot, std::int64_t chatID);
     void ViewReaded(TgBot::Bot &bot, std::int64_t chatID);
     void DeleteBook(TgBot::Bot &bot, TgBot::Message::Ptr &message);
+    void EditBook(TgBot::Bot &bot, TgBot::Message::Ptr &message);
     void LoadData();
 };
 #endif
