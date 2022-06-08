@@ -22,7 +22,7 @@
 //Initial command for bots
 std::vector<TgBot::BotCommand::Ptr> InitialCommands() {
     std::vector<TgBot::BotCommand::Ptr> botcommand;
-    for(int i = 0; i < Menucommand->size(); i++) {
+    for(int i = 0; i < Menucommand->length(); i++) {
         TgBot::BotCommand::Ptr tmp(new TgBot::BotCommand);
         tmp->command = Menucommand[i];
         tmp->description = Menudescription[i];
@@ -66,7 +66,7 @@ int main() {
         return ;
     });
     bot.getEvents().onCommand("edit", [&bot, &logics](TgBot::Message::Ptr message) {
-        
+        logics.EditBook(bot, message);
         return ;
     });
 

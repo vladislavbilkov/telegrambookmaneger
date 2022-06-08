@@ -17,6 +17,9 @@ class BotLogics
 
     std::int32_t FindIDMessageToDel(std::int32_t findID);
     void SaveChange();
+    char CheckWhatIsEdit(std::string messagetext);
+    bool ChangeList(char whatdit, std::int32_t originid);
+    
     public:
     std::list<InfoToDelete> ListReplyMessage;
     BotLogics();
